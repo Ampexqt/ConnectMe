@@ -5,7 +5,9 @@ import '../core/theme/app_colors.dart';
 import '../core/theme/app_spacing.dart';
 import '../core/theme/app_typography.dart';
 import '../providers/theme_provider.dart';
+import '../providers/app_provider.dart';
 import '../widgets/common/custom_card.dart';
+import 'auth_screen.dart';
 
 /// Settings Screen
 /// App settings and user preferences
@@ -185,7 +187,24 @@ class SettingsScreen extends StatelessWidget {
                               label: 'Logout',
                               isDark: isDark,
                               isDanger: true,
-                              onTap: () {},
+                              onTap: () {
+                                // Reset authentication state
+                                final appProvider = Provider.of<AppProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                                appProvider.setAuthenticated(false);
+                                appProvider.setOnboardingCompleted(false);
+                                appProvider.setInterestsSelected(false);
+
+                                // Navigate to login screen
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (_) => const AuthScreen(),
+                                  ),
+                                  (route) => false,
+                                );
+                              },
                             ),
                           ],
                         ),

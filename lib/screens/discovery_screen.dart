@@ -8,6 +8,7 @@ import '../providers/theme_provider.dart';
 import '../providers/app_provider.dart';
 import '../models/user_profile.dart';
 import 'chat_screen.dart';
+import 'user_detail_screen.dart';
 
 /// Discovery Screen
 /// Swipeable card interface for discovering people with infinite looping
@@ -56,6 +57,16 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     setState(() {
       _currentIndex = (_currentIndex + 1) % appProvider.users.length;
     });
+  }
+
+  void _handleInfo() {
+    final appProvider = context.read<AppProvider>();
+    final currentUser = appProvider.users[_currentIndex];
+
+    // Navigate to user detail screen
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => UserDetailScreen(user: currentUser)),
+    );
   }
 
   @override
@@ -112,6 +123,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                       isDark: isDark,
                       onPass: _handlePass,
                       onLike: _handleLike,
+                      onInfo: _handleInfo,
                     ),
                   ),
                 ),
@@ -129,6 +141,7 @@ class _UserCard extends StatelessWidget {
   final bool isDark;
   final VoidCallback onPass;
   final VoidCallback onLike;
+  final VoidCallback onInfo;
 
   const _UserCard({
     super.key,
@@ -136,6 +149,7 @@ class _UserCard extends StatelessWidget {
     required this.isDark,
     required this.onPass,
     required this.onLike,
+    required this.onInfo,
   });
 
   @override
@@ -295,9 +309,7 @@ class _UserCard extends StatelessWidget {
                         color: isDark
                             ? AppColors.darkPrimary
                             : AppColors.lightPrimary,
-                        onTap: () {
-                          // Show profile details
-                        },
+                        onTap: onInfo,
                       ),
                       const SizedBox(width: AppSpacing.md),
                       _ActionButton(
