@@ -84,6 +84,53 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Edit Profile button (top-right)
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          // TODO: Implement edit profile functionality
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.sm,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(AppRadius.full),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                LucideIcons.edit2,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              const Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  fontSize: AppTypography.fontSM,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 // Content overlay
                 Positioned(
                   bottom: AppSpacing.lg,
