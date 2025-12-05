@@ -51,6 +51,11 @@ class ProfileScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenHeight < 700 || screenWidth < 400;
+    final heroHeight = isSmallScreen ? 240.0 : 320.0;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -61,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 // Background image
                 Container(
-                  height: 320,
+                  height: heroHeight,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(_currentUser.image),
@@ -71,15 +76,15 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 // Gradient overlay
                 Container(
-                  height: 320,
+                  height: heroHeight,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.4),
-                        Colors.black.withOpacity(0.6),
-                        Colors.black.withOpacity(0.8),
+                        Colors.black.withValues(alpha: 0.4),
+                        Colors.black.withValues(alpha: 0.6),
+                        Colors.black.withValues(alpha: 0.8),
                       ],
                     ),
                   ),
@@ -87,7 +92,9 @@ class ProfileScreen extends StatelessWidget {
                 // Edit Profile button (top-right)
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
+                    padding: EdgeInsets.all(
+                      isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                    ),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: GestureDetector(
@@ -95,31 +102,37 @@ class ProfileScreen extends StatelessWidget {
                           // TODO: Implement edit profile functionality
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                            vertical: AppSpacing.sm,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSmallScreen
+                                ? AppSpacing.sm
+                                : AppSpacing.md,
+                            vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(AppRadius.full),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 LucideIcons.edit2,
                                 color: Colors.white,
-                                size: 16,
+                                size: isSmallScreen ? 14 : 16,
                               ),
-                              const SizedBox(width: AppSpacing.xs),
-                              const Text(
+                              SizedBox(
+                                width: isSmallScreen ? 4 : AppSpacing.xs,
+                              ),
+                              Text(
                                 'Edit Profile',
                                 style: TextStyle(
-                                  fontSize: AppTypography.fontSM,
+                                  fontSize: isSmallScreen
+                                      ? AppTypography.fontXS
+                                      : AppTypography.fontSM,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),
@@ -133,21 +146,23 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 // Content overlay
                 Positioned(
-                  bottom: AppSpacing.lg,
-                  left: AppSpacing.lg,
-                  right: AppSpacing.lg,
+                  bottom: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                  left: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                  right: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${_currentUser.name}, ${_currentUser.age}',
-                        style: const TextStyle(
-                          fontSize: AppTypography.font2XL,
+                        style: TextStyle(
+                          fontSize: isSmallScreen
+                              ? AppTypography.fontXL
+                              : AppTypography.font2XL,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xs),
+                      SizedBox(height: isSmallScreen ? 2 : AppSpacing.xs),
                       Row(
                         children: [
                           const Icon(
@@ -156,11 +171,14 @@ class ProfileScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            _currentUser.location,
-                            style: TextStyle(
-                              fontSize: AppTypography.fontBase,
-                              color: Colors.white.withOpacity(0.9),
+                          Flexible(
+                            child: Text(
+                              _currentUser.location,
+                              style: TextStyle(
+                                fontSize: AppTypography.fontBase,
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],

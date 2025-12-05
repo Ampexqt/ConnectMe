@@ -154,8 +154,18 @@ class _UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Responsive sizing
+    final isSmallScreen = screenHeight < 700 || screenWidth < 400;
+    final cardPadding = isSmallScreen ? AppSpacing.md : AppSpacing.md + 4;
+    final imageHeight = isSmallScreen ? 280.0 : 384.0;
+
     return Container(
-      height: 580,
+      constraints: BoxConstraints(
+        maxHeight: screenHeight * 0.75, // Use 75% of screen height
+      ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -170,7 +180,7 @@ class _UserCard extends StatelessWidget {
           Stack(
             children: [
               Container(
-                height: 384,
+                height: imageHeight,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(AppRadius.xl),
@@ -183,7 +193,7 @@ class _UserCard extends StatelessWidget {
                 ),
               ),
               Container(
-                height: 384,
+                height: imageHeight,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(AppRadius.xl),
@@ -192,26 +202,31 @@ class _UserCard extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.7),
+                    ],
                   ),
                 ),
               ),
               Positioned(
-                bottom: AppSpacing.md,
-                left: AppSpacing.md,
-                right: AppSpacing.md,
+                bottom: isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                left: isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                right: isSmallScreen ? AppSpacing.sm : AppSpacing.md,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${user.name}, ${user.age}',
-                      style: const TextStyle(
-                        fontSize: AppTypography.fontXL,
+                      style: TextStyle(
+                        fontSize: isSmallScreen
+                            ? AppTypography.fontLG
+                            : AppTypography.fontXL,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    SizedBox(height: isSmallScreen ? 2 : AppSpacing.xs),
                     Row(
                       children: [
                         const Icon(
@@ -220,11 +235,14 @@ class _UserCard extends StatelessWidget {
                           color: Colors.white,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          '${user.location} • ${user.distance}',
-                          style: TextStyle(
-                            fontSize: AppTypography.fontSM,
-                            color: Colors.white.withOpacity(0.9),
+                        Flexible(
+                          child: Text(
+                            '${user.location} • ${user.distance}',
+                            style: TextStyle(
+                              fontSize: AppTypography.fontSM,
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -238,7 +256,7 @@ class _UserCard extends StatelessWidget {
           // Info section
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.md + 4),
+              padding: EdgeInsets.all(cardPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -250,11 +268,13 @@ class _UserCard extends StatelessWidget {
                       color: isDark ? AppColors.darkText : AppColors.lightText,
                       height: AppTypography.lineHeightRelaxed,
                     ),
-                    maxLines: 2,
+                    maxLines: isSmallScreen ? 2 : 3,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: AppSpacing.md - 4),
+                  SizedBox(
+                    height: isSmallScreen ? AppSpacing.xs : AppSpacing.md - 4,
+                  ),
 
                   // Interest tags
                   Wrap(
@@ -262,8 +282,10 @@ class _UserCard extends StatelessWidget {
                     runSpacing: AppSpacing.sm,
                     children: user.interests.take(3).map((interest) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md - 4,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSmallScreen
+                              ? AppSpacing.sm
+                              : AppSpacing.md - 4,
                           vertical: AppSpacing.xs + 2,
                         ),
                         decoration: BoxDecoration(
@@ -302,16 +324,22 @@ class _UserCard extends StatelessWidget {
                         icon: LucideIcons.x,
                         color: const Color(0xFF2D3436),
                         onTap: onPass,
+                        isSmallScreen: isSmallScreen,
                       ),
-                      const SizedBox(width: AppSpacing.md),
+                      SizedBox(
+                        width: isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                      ),
                       _ActionButton(
                         icon: LucideIcons.info,
                         color: isDark
                             ? AppColors.darkPrimary
                             : AppColors.lightPrimary,
                         onTap: onInfo,
+                        isSmallScreen: isSmallScreen,
                       ),
-                      const SizedBox(width: AppSpacing.md),
+                      SizedBox(
+                        width: isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                      ),
                       _ActionButton(
                         icon: LucideIcons.heart,
                         color: isDark
@@ -319,6 +347,7 @@ class _UserCard extends StatelessWidget {
                             : AppColors.lightSecondary,
                         onTap: onLike,
                         filled: true,
+                        isSmallScreen: isSmallScreen,
                       ),
                     ],
                   ),
@@ -337,12 +366,14 @@ class _ActionButton extends StatefulWidget {
   final Color color;
   final VoidCallback onTap;
   final bool filled;
+  final bool isSmallScreen;
 
   const _ActionButton({
     required this.icon,
     required this.color,
     required this.onTap,
     this.filled = false,
+    this.isSmallScreen = false,
   });
 
   @override
@@ -375,6 +406,11 @@ class _ActionButtonState extends State<_ActionButton>
 
   @override
   Widget build(BuildContext context) {
+    final buttonSize = widget.isSmallScreen ? 48.0 : 56.0;
+    final iconSize = widget.filled
+        ? (widget.isSmallScreen ? 20.0 : 24.0)
+        : (widget.isSmallScreen ? 24.0 : 28.0);
+
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -385,17 +421,13 @@ class _ActionButtonState extends State<_ActionButton>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          width: 56,
-          height: 56,
+          width: buttonSize,
+          height: buttonSize,
           decoration: BoxDecoration(
             color: widget.color,
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            widget.icon,
-            size: widget.filled ? 24 : 28,
-            color: Colors.white,
-          ),
+          child: Icon(widget.icon, size: iconSize, color: Colors.white),
         ),
       ),
     );

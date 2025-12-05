@@ -41,7 +41,7 @@ class AppColors {
   // Shadow Colors
   static List<BoxShadow> lightShadowSmall = [
     BoxShadow(
-      color: const Color(0xFFFF6B6B).withOpacity(0.08),
+      color: const Color(0xFFFF6B6B).withValues(alpha: 0.08),
       offset: const Offset(0, 2),
       blurRadius: 8,
     ),
@@ -49,7 +49,7 @@ class AppColors {
 
   static List<BoxShadow> lightShadowMedium = [
     BoxShadow(
-      color: const Color(0xFFFF6B6B).withOpacity(0.12),
+      color: const Color(0xFFFF6B6B).withValues(alpha: 0.12),
       offset: const Offset(0, 4),
       blurRadius: 16,
     ),
@@ -57,7 +57,7 @@ class AppColors {
 
   static List<BoxShadow> lightShadowLarge = [
     BoxShadow(
-      color: const Color(0xFFFF6B6B).withOpacity(0.16),
+      color: const Color(0xFFFF6B6B).withValues(alpha: 0.16),
       offset: const Offset(0, 8),
       blurRadius: 32,
     ),
@@ -65,7 +65,7 @@ class AppColors {
 
   static List<BoxShadow> darkShadowSmall = [
     BoxShadow(
-      color: Colors.black.withOpacity(0.3),
+      color: Colors.black.withValues(alpha: 0.3),
       offset: const Offset(0, 2),
       blurRadius: 8,
     ),
@@ -73,7 +73,7 @@ class AppColors {
 
   static List<BoxShadow> darkShadowMedium = [
     BoxShadow(
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       offset: const Offset(0, 4),
       blurRadius: 16,
     ),
@@ -81,7 +81,7 @@ class AppColors {
 
   static List<BoxShadow> darkShadowLarge = [
     BoxShadow(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       offset: const Offset(0, 8),
       blurRadius: 32,
     ),

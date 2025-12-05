@@ -19,6 +19,11 @@ class UserDetailScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenHeight < 700 || screenWidth < 400;
+    final heroHeight = isSmallScreen ? 280.0 : 400.0;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -29,7 +34,7 @@ class UserDetailScreen extends StatelessWidget {
               children: [
                 // Background image
                 Container(
-                  height: 400,
+                  height: heroHeight,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(user.image),
@@ -39,15 +44,15 @@ class UserDetailScreen extends StatelessWidget {
                 ),
                 // Gradient overlay
                 Container(
-                  height: 400,
+                  height: heroHeight,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.4),
-                        Colors.black.withOpacity(0.6),
-                        Colors.black.withOpacity(0.8),
+                        Colors.black.withValues(alpha: 0.4),
+                        Colors.black.withValues(alpha: 0.6),
+                        Colors.black.withValues(alpha: 0.8),
                       ],
                     ),
                   ),
@@ -55,18 +60,22 @@ class UserDetailScreen extends StatelessWidget {
                 // Back button
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
+                    padding: EdgeInsets.all(
+                      isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                    ),
                     child: IconButton(
                       icon: Container(
-                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        padding: EdgeInsets.all(
+                          isSmallScreen ? AppSpacing.xs : AppSpacing.sm,
+                        ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           LucideIcons.arrowLeft,
                           color: Colors.white,
-                          size: 24,
+                          size: isSmallScreen ? 20 : 24,
                         ),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
@@ -75,21 +84,23 @@ class UserDetailScreen extends StatelessWidget {
                 ),
                 // Content overlay
                 Positioned(
-                  bottom: AppSpacing.lg,
-                  left: AppSpacing.lg,
-                  right: AppSpacing.lg,
+                  bottom: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                  left: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                  right: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${user.name}, ${user.age}',
-                        style: const TextStyle(
-                          fontSize: AppTypography.font3XL,
+                        style: TextStyle(
+                          fontSize: isSmallScreen
+                              ? AppTypography.font2XL
+                              : AppTypography.font3XL,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.xs),
+                      SizedBox(height: isSmallScreen ? 2 : AppSpacing.xs),
                       Row(
                         children: [
                           const Icon(
@@ -98,11 +109,14 @@ class UserDetailScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            user.location,
-                            style: TextStyle(
-                              fontSize: AppTypography.fontBase,
-                              color: Colors.white.withOpacity(0.9),
+                          Flexible(
+                            child: Text(
+                              user.location,
+                              style: TextStyle(
+                                fontSize: AppTypography.fontBase,
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],

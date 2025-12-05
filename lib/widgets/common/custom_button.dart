@@ -133,8 +133,8 @@ class _CustomButtonState extends State<CustomButton>
     }
 
     if (widget.disabled) {
-      backgroundColor = backgroundColor.withOpacity(0.5);
-      textColor = textColor.withOpacity(0.5);
+      backgroundColor = backgroundColor.withValues(alpha: 0.5);
+      textColor = textColor.withValues(alpha: 0.5);
     }
 
     return GestureDetector(
