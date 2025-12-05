@@ -7,6 +7,7 @@ import '../core/theme/app_typography.dart';
 import '../providers/theme_provider.dart';
 import '../providers/app_provider.dart';
 import '../models/user_profile.dart';
+import 'chat_screen.dart';
 
 /// Discovery Screen
 /// Swipeable card interface for discovering people with infinite looping
@@ -30,8 +31,29 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
 
   void _handleLike() {
     final appProvider = context.read<AppProvider>();
+    final currentUser = appProvider.users[_currentIndex];
+
+    // Find the conversation for this user
+    final conversation = appProvider.conversations.firstWhere(
+      (conv) => conv.userId == currentUser.id,
+      orElse: () =>
+          appProvider.conversations.first, // Fallback to first conversation
+    );
+
+    // Navigate to chat screen
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (_) => ChatScreen(conversation: conversation),
+          ),
+        )
+        .then((_) {
+          // After returning from chat, switch to Chats tab
+          appProvider.setTabIndex(1);
+        });
+
+    // Move to next card
     setState(() {
-      // Loop back to start if we've reached the end (infinite loop)
       _currentIndex = (_currentIndex + 1) % appProvider.users.length;
     });
   }
