@@ -187,6 +187,7 @@ class _NavItemState extends State<_NavItem>
 
     return GestureDetector(
       onTap: widget.onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         color: Colors.transparent,
         padding: const EdgeInsets.symmetric(
