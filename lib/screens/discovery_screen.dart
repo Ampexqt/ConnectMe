@@ -76,61 +76,59 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     final isDark = themeProvider.isDarkMode;
     final users = appProvider.users;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Discover',
-                    style: TextStyle(
-                      fontSize: AppTypography.fontXL,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkText : AppColors.lightText,
-                    ),
+    return SafeArea(
+      child: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Discover',
+                  style: TextStyle(
+                    fontSize: AppTypography.fontXL,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? AppColors.darkText : AppColors.lightText,
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'People nearby who share your interests',
-                    style: TextStyle(
-                      fontSize: AppTypography.fontSM,
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
-                    ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'People nearby who share your interests',
+                  style: TextStyle(
+                    fontSize: AppTypography.fontSM,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
 
-            // Card stack (always shows a card due to infinite looping)
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 448),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                    ),
-                    child: _UserCard(
-                      key: ValueKey(users[_currentIndex].id),
-                      user: users[_currentIndex],
-                      isDark: isDark,
-                      onPass: _handlePass,
-                      onLike: _handleLike,
-                      onInfo: _handleInfo,
-                    ),
+          // Card stack (always shows a card due to infinite looping)
+          Expanded(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 448),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
+                  child: _UserCard(
+                    key: ValueKey(users[_currentIndex].id),
+                    user: users[_currentIndex],
+                    isDark: isDark,
+                    onPass: _handlePass,
+                    onLike: _handleLike,
+                    onInfo: _handleInfo,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

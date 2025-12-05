@@ -22,141 +22,137 @@ class ChatListScreen extends StatelessWidget {
     final appProvider = Provider.of<AppProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Messages',
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Messages',
+                  style: TextStyle(
+                    fontSize: AppTypography.fontXL,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? AppColors.darkText : AppColors.lightText,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                // Search input
+                Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                      width: 2,
+                    ),
+                  ),
+                  child: TextField(
                     style: TextStyle(
-                      fontSize: AppTypography.fontXL,
-                      fontWeight: FontWeight.w700,
+                      fontSize: AppTypography.fontBase,
                       color: isDark ? AppColors.darkText : AppColors.lightText,
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  // Search input
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.darkSurface
-                          : AppColors.lightSurface,
-                      borderRadius: BorderRadius.circular(AppRadius.lg),
-                      border: Border.all(
+                    decoration: InputDecoration(
+                      hintText: 'Search messages...',
+                      hintStyle: TextStyle(
                         color: isDark
-                            ? AppColors.darkBorder
-                            : AppColors.lightBorder,
-                        width: 2,
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
-                    ),
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: AppTypography.fontBase,
+                      prefixIcon: Icon(
+                        LucideIcons.search,
+                        size: 20,
                         color: isDark
-                            ? AppColors.darkText
-                            : AppColors.lightText,
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
-                      decoration: InputDecoration(
-                        hintText: 'Search messages...',
-                        hintStyle: TextStyle(
-                          color: isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
-                        ),
-                        prefixIcon: Icon(
-                          LucideIcons.search,
-                          size: 20,
-                          color: isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.md - 4,
-                        ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.md - 4,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
 
-            // Chat list
-            Expanded(
-              child: appProvider.conversations.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            LucideIcons.messageCircle,
-                            size: 64,
+          // Chat list
+          Expanded(
+            child: appProvider.conversations.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          LucideIcons.messageCircle,
+                          size: 64,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          'No messages yet',
+                          style: TextStyle(
+                            fontSize: AppTypography.fontLG,
+                            fontWeight: FontWeight.w600,
                             color: isDark
-                                ? AppColors.darkTextTertiary
-                                : AppColors.lightTextTertiary,
+                                ? AppColors.darkText
+                                : AppColors.lightText,
                           ),
-                          const SizedBox(height: AppSpacing.md),
-                          Text(
-                            'No messages yet',
-                            style: TextStyle(
-                              fontSize: AppTypography.fontLG,
-                              fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.darkText
-                                  : AppColors.lightText,
-                            ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          'Start discovering people to chat with',
+                          style: TextStyle(
+                            fontSize: AppTypography.fontSM,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text(
-                            'Start discovering people to chat with',
-                            style: TextStyle(
-                              fontSize: AppTypography.fontSM,
-                              color: isDark
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg,
-                      ),
-                      itemCount: appProvider.conversations.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: AppSpacing.md),
-                      itemBuilder: (context, index) {
-                        return TweenAnimationBuilder<double>(
-                          duration: Duration(milliseconds: 300 + (index * 50)),
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          builder: (context, value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(-20 * (1 - value), 0),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: _ChatItem(
-                            conversation: appProvider.conversations[index],
-                            isDark: isDark,
-                          ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-            ),
-          ],
-        ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                    ),
+                    itemCount: appProvider.conversations.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSpacing.md),
+                    itemBuilder: (context, index) {
+                      return TweenAnimationBuilder<double>(
+                        duration: Duration(milliseconds: 300 + (index * 50)),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Transform.translate(
+                              offset: Offset(-20 * (1 - value), 0),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: _ChatItem(
+                          conversation: appProvider.conversations[index],
+                          isDark: isDark,
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

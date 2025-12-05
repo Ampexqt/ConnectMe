@@ -19,232 +19,230 @@ class SettingsScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: AppTypography.fontXL,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkText : AppColors.lightText,
-                  ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Text(
+                'Settings',
+                style: TextStyle(
+                  fontSize: AppTypography.fontXL,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? AppColors.darkText : AppColors.lightText,
                 ),
+              ),
 
-                const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.lg),
 
-                // Preferences section
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 300),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(0, 20 * (1 - value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _SectionTitle(title: 'PREFERENCES', isDark: isDark),
-                      const SizedBox(height: AppSpacing.md - 4),
-                      CustomCard(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          children: [
-                            _SettingItem(
-                              icon: isDark ? LucideIcons.moon : LucideIcons.sun,
-                              label: 'Dark Mode',
-                              isDark: isDark,
-                              trailing: _ToggleSwitch(
-                                value: isDark,
-                                onChanged: (value) {
-                                  themeProvider.toggleTheme();
-                                },
-                                isDark: isDark,
-                              ),
-                            ),
-                            _Divider(isDark: isDark),
-                            _SettingItem(
-                              icon: LucideIcons.bell,
-                              label: 'Notifications',
-                              isDark: isDark,
-                              trailing: _ToggleSwitch(
-                                value: true,
-                                onChanged: (value) {},
-                                isDark: isDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: AppSpacing.lg),
-
-                // Account section
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 400),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(0, 20 * (1 - value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _SectionTitle(title: 'ACCOUNT', isDark: isDark),
-                      const SizedBox(height: AppSpacing.md - 4),
-                      CustomCard(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          children: [
-                            _SettingItem(
-                              icon: LucideIcons.user,
-                              label: 'Edit Profile',
-                              isDark: isDark,
-                              onTap: () {},
-                            ),
-                            _Divider(isDark: isDark),
-                            _SettingItem(
-                              icon: LucideIcons.shield,
-                              label: 'Privacy',
-                              isDark: isDark,
-                              onTap: () {},
-                            ),
-                            _Divider(isDark: isDark),
-                            _SettingItem(
-                              icon: LucideIcons.globe,
-                              label: 'Language',
-                              isDark: isDark,
-                              trailing: Text(
-                                'English',
-                                style: TextStyle(
-                                  fontSize: AppTypography.fontSM,
-                                  color: isDark
-                                      ? AppColors.darkTextSecondary
-                                      : AppColors.lightTextSecondary,
-                                ),
-                              ),
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: AppSpacing.lg),
-
-                // Support section
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 500),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Transform.translate(
-                        offset: Offset(0, 20 * (1 - value)),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _SectionTitle(title: 'SUPPORT', isDark: isDark),
-                      const SizedBox(height: AppSpacing.md - 4),
-                      CustomCard(
-                        padding: EdgeInsets.zero,
-                        child: Column(
-                          children: [
-                            _SettingItem(
-                              icon: LucideIcons.helpCircle,
-                              label: 'Help & Support',
-                              isDark: isDark,
-                              onTap: () {},
-                            ),
-                            _Divider(isDark: isDark),
-                            _SettingItem(
-                              icon: LucideIcons.logOut,
-                              label: 'Logout',
-                              isDark: isDark,
-                              isDanger: true,
-                              onTap: () {
-                                // Reset authentication state
-                                final appProvider = Provider.of<AppProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                                appProvider.setAuthenticated(false);
-                                appProvider.setOnboardingCompleted(false);
-                                appProvider.setInterestsSelected(false);
-
-                                // Navigate to login screen
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (_) => const AuthScreen(),
-                                  ),
-                                  (route) => false,
-                                );
+              // Preferences section
+              TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 300),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _SectionTitle(title: 'PREFERENCES', isDark: isDark),
+                    const SizedBox(height: AppSpacing.md - 4),
+                    CustomCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          _SettingItem(
+                            icon: isDark ? LucideIcons.moon : LucideIcons.sun,
+                            label: 'Dark Mode',
+                            isDark: isDark,
+                            trailing: _ToggleSwitch(
+                              value: isDark,
+                              onChanged: (value) {
+                                themeProvider.toggleTheme();
                               },
+                              isDark: isDark,
                             ),
-                          ],
-                        ),
+                          ),
+                          _Divider(isDark: isDark),
+                          _SettingItem(
+                            icon: LucideIcons.bell,
+                            label: 'Notifications',
+                            isDark: isDark,
+                            trailing: _ToggleSwitch(
+                              value: true,
+                              onChanged: (value) {},
+                              isDark: isDark,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.lg),
 
-                // Footer
-                Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Version 1.0.0',
-                        style: TextStyle(
-                          fontSize: AppTypography.fontSM,
-                          color: isDark
-                              ? AppColors.darkTextTertiary
-                              : AppColors.lightTextTertiary,
-                        ),
+              // Account section
+              TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 400),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _SectionTitle(title: 'ACCOUNT', isDark: isDark),
+                    const SizedBox(height: AppSpacing.md - 4),
+                    CustomCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          _SettingItem(
+                            icon: LucideIcons.user,
+                            label: 'Edit Profile',
+                            isDark: isDark,
+                            onTap: () {},
+                          ),
+                          _Divider(isDark: isDark),
+                          _SettingItem(
+                            icon: LucideIcons.shield,
+                            label: 'Privacy',
+                            isDark: isDark,
+                            onTap: () {},
+                          ),
+                          _Divider(isDark: isDark),
+                          _SettingItem(
+                            icon: LucideIcons.globe,
+                            label: 'Language',
+                            isDark: isDark,
+                            trailing: Text(
+                              'English',
+                              style: TextStyle(
+                                fontSize: AppTypography.fontSM,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        'Made with ❤️ by ConnectMe',
-                        style: TextStyle(
-                          fontSize: AppTypography.fontXS,
-                          color: isDark
-                              ? AppColors.darkTextTertiary
-                              : AppColors.lightTextTertiary,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: AppSpacing.xl),
-              ],
-            ),
+              const SizedBox(height: AppSpacing.lg),
+
+              // Support section
+              TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 500),
+                tween: Tween(begin: 0.0, end: 1.0),
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 20 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _SectionTitle(title: 'SUPPORT', isDark: isDark),
+                    const SizedBox(height: AppSpacing.md - 4),
+                    CustomCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          _SettingItem(
+                            icon: LucideIcons.helpCircle,
+                            label: 'Help & Support',
+                            isDark: isDark,
+                            onTap: () {},
+                          ),
+                          _Divider(isDark: isDark),
+                          _SettingItem(
+                            icon: LucideIcons.logOut,
+                            label: 'Logout',
+                            isDark: isDark,
+                            isDanger: true,
+                            onTap: () {
+                              // Reset authentication state
+                              final appProvider = Provider.of<AppProvider>(
+                                context,
+                                listen: false,
+                              );
+                              appProvider.setAuthenticated(false);
+                              appProvider.setOnboardingCompleted(false);
+                              appProvider.setInterestsSelected(false);
+
+                              // Navigate to login screen
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (_) => const AuthScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.lg),
+
+              // Footer
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'Version 1.0.0',
+                      style: TextStyle(
+                        fontSize: AppTypography.fontSM,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      'Made with ❤️ by ConnectMe',
+                      style: TextStyle(
+                        fontSize: AppTypography.fontXS,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.xl),
+            ],
           ),
         ),
       ),

@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<AppProvider>(
       builder: (context, appProvider, _) {
         return Scaffold(
+          extendBody: false,
           body: IndexedStack(
             index: appProvider.currentTabIndex,
             children: _screens,
@@ -63,54 +64,71 @@ class _BottomNavBar extends StatelessWidget {
     final appProvider = Provider.of<AppProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-            width: 2,
+    return Material(
+      elevation: 8,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          border: Border(
+            top: BorderSide(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 2,
+            ),
           ),
         ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.md - 4,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: LucideIcons.heart,
-                label: 'Discover',
-                isActive: appProvider.currentTabIndex == 0,
-                onTap: () => appProvider.setTabIndex(0),
-                isDark: isDark,
-              ),
-              _NavItem(
-                icon: LucideIcons.messageCircle,
-                label: 'Chats',
-                isActive: appProvider.currentTabIndex == 1,
-                onTap: () => appProvider.setTabIndex(1),
-                isDark: isDark,
-              ),
-              _NavItem(
-                icon: LucideIcons.user,
-                label: 'Profile',
-                isActive: appProvider.currentTabIndex == 2,
-                onTap: () => appProvider.setTabIndex(2),
-                isDark: isDark,
-              ),
-              _NavItem(
-                icon: LucideIcons.settings,
-                label: 'Settings',
-                isActive: appProvider.currentTabIndex == 3,
-                onTap: () => appProvider.setTabIndex(3),
-                isDark: isDark,
-              ),
-            ],
+        child: SafeArea(
+          top: false,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 60),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.md - 4,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavItem(
+                  icon: LucideIcons.heart,
+                  label: 'Discover',
+                  isActive: appProvider.currentTabIndex == 0,
+                  onTap: () {
+                    print('DEBUG: Discover tab tapped');
+                    appProvider.setTabIndex(0);
+                  },
+                  isDark: isDark,
+                ),
+                _NavItem(
+                  icon: LucideIcons.messageCircle,
+                  label: 'Chats',
+                  isActive: appProvider.currentTabIndex == 1,
+                  onTap: () {
+                    print('DEBUG: Chats tab tapped');
+                    appProvider.setTabIndex(1);
+                  },
+                  isDark: isDark,
+                ),
+                _NavItem(
+                  icon: LucideIcons.user,
+                  label: 'Profile',
+                  isActive: appProvider.currentTabIndex == 2,
+                  onTap: () {
+                    print('DEBUG: Profile tab tapped');
+                    appProvider.setTabIndex(2);
+                  },
+                  isDark: isDark,
+                ),
+                _NavItem(
+                  icon: LucideIcons.settings,
+                  label: 'Settings',
+                  isActive: appProvider.currentTabIndex == 3,
+                  onTap: () {
+                    print('DEBUG: Settings tab tapped');
+                    appProvider.setTabIndex(3);
+                  },
+                  isDark: isDark,
+                ),
+              ],
+            ),
           ),
         ),
       ),

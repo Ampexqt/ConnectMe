@@ -56,273 +56,267 @@ class ProfileScreen extends StatelessWidget {
     final isSmallScreen = screenHeight < 700 || screenWidth < 400;
     final heroHeight = isSmallScreen ? 240.0 : 320.0;
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero Image Section
-            Stack(
-              children: [
-                // Background image
-                Container(
-                  height: heroHeight,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(_currentUser.image),
-                      fit: BoxFit.cover,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Hero Image Section
+          Stack(
+            children: [
+              // Background image
+              Container(
+                height: heroHeight,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(_currentUser.image),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              // Gradient overlay
+              Container(
+                height: heroHeight,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.4),
+                      Colors.black.withValues(alpha: 0.6),
+                      Colors.black.withValues(alpha: 0.8),
+                    ],
+                  ),
+                ),
+              ),
+              // Edit Profile button (top-right)
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(
+                    isSmallScreen ? AppSpacing.sm : AppSpacing.md,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        // TODO: Implement edit profile functionality
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSmallScreen
+                              ? AppSpacing.sm
+                              : AppSpacing.md,
+                          vertical: AppSpacing.xs,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(AppRadius.full),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              LucideIcons.edit2,
+                              color: Colors.white,
+                              size: isSmallScreen ? 14 : 16,
+                            ),
+                            SizedBox(width: isSmallScreen ? 4 : AppSpacing.xs),
+                            Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                fontSize: isSmallScreen
+                                    ? AppTypography.fontXS
+                                    : AppTypography.fontSM,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                // Gradient overlay
-                Container(
-                  height: heroHeight,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: 0.4),
-                        Colors.black.withValues(alpha: 0.6),
-                        Colors.black.withValues(alpha: 0.8),
+              ),
+              // Content overlay
+              Positioned(
+                bottom: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                left: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                right: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${_currentUser.name}, ${_currentUser.age}',
+                      style: TextStyle(
+                        fontSize: isSmallScreen
+                            ? AppTypography.fontXL
+                            : AppTypography.font2XL,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: isSmallScreen ? 2 : AppSpacing.xs),
+                    Row(
+                      children: [
+                        const Icon(
+                          LucideIcons.mapPin,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            _currentUser.location,
+                            style: TextStyle(
+                              fontSize: AppTypography.fontBase,
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // Content sections
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // About section
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 300),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: _ProfileSection(
+                    title: 'About',
+                    isDark: isDark,
+                    child: Text(
+                      _currentUser.bio,
+                      style: TextStyle(
+                        fontSize: AppTypography.fontBase,
+                        color: isDark
+                            ? AppColors.darkText
+                            : AppColors.lightText,
+                        height: AppTypography.lineHeightRelaxed,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: AppSpacing.lg),
+
+                // Interests section
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 400),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: _ProfileSection(
+                    title: 'Interests',
+                    isDark: isDark,
+                    child: Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
+                      children: _currentUser.interests.map((interest) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.sm,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AppColors.darkSurfaceElevated
+                                : AppColors.lightSurfaceElevated,
+                            borderRadius: BorderRadius.circular(AppRadius.full),
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
+                              width: 2,
+                            ),
+                          ),
+                          child: Text(
+                            interest,
+                            style: TextStyle(
+                              fontSize: AppTypography.fontSM,
+                              fontWeight: FontWeight.w500,
+                              color: isDark
+                                  ? AppColors.darkText
+                                  : AppColors.lightText,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: AppSpacing.lg),
+
+                // Details section
+                TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 500),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: _ProfileSection(
+                    title: 'Details',
+                    isDark: isDark,
+                    child: Column(
+                      children: [
+                        _DetailRow(
+                          icon: LucideIcons.briefcase,
+                          text: _currentUser.work,
+                          isDark: isDark,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        _DetailRow(
+                          icon: LucideIcons.graduationCap,
+                          text: _currentUser.education,
+                          isDark: isDark,
+                        ),
                       ],
                     ),
                   ),
                 ),
-                // Edit Profile button (top-right)
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.all(
-                      isSmallScreen ? AppSpacing.sm : AppSpacing.md,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          // TODO: Implement edit profile functionality
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isSmallScreen
-                                ? AppSpacing.sm
-                                : AppSpacing.md,
-                            vertical: AppSpacing.xs,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(AppRadius.full),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                LucideIcons.edit2,
-                                color: Colors.white,
-                                size: isSmallScreen ? 14 : 16,
-                              ),
-                              SizedBox(
-                                width: isSmallScreen ? 4 : AppSpacing.xs,
-                              ),
-                              Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  fontSize: isSmallScreen
-                                      ? AppTypography.fontXS
-                                      : AppTypography.fontSM,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // Content overlay
-                Positioned(
-                  bottom: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
-                  left: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
-                  right: isSmallScreen ? AppSpacing.md : AppSpacing.lg,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${_currentUser.name}, ${_currentUser.age}',
-                        style: TextStyle(
-                          fontSize: isSmallScreen
-                              ? AppTypography.fontXL
-                              : AppTypography.font2XL,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: isSmallScreen ? 2 : AppSpacing.xs),
-                      Row(
-                        children: [
-                          const Icon(
-                            LucideIcons.mapPin,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              _currentUser.location,
-                              style: TextStyle(
-                                fontSize: AppTypography.fontBase,
-                                color: Colors.white.withValues(alpha: 0.9),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+
+                const SizedBox(height: AppSpacing.xxl),
               ],
             ),
-
-            // Content sections
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // About section
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 300),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: _ProfileSection(
-                      title: 'About',
-                      isDark: isDark,
-                      child: Text(
-                        _currentUser.bio,
-                        style: TextStyle(
-                          fontSize: AppTypography.fontBase,
-                          color: isDark
-                              ? AppColors.darkText
-                              : AppColors.lightText,
-                          height: AppTypography.lineHeightRelaxed,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: AppSpacing.lg),
-
-                  // Interests section
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 400),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: _ProfileSection(
-                      title: 'Interests',
-                      isDark: isDark,
-                      child: Wrap(
-                        spacing: AppSpacing.sm,
-                        runSpacing: AppSpacing.sm,
-                        children: _currentUser.interests.map((interest) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md,
-                              vertical: AppSpacing.sm,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? AppColors.darkSurfaceElevated
-                                  : AppColors.lightSurfaceElevated,
-                              borderRadius: BorderRadius.circular(
-                                AppRadius.full,
-                              ),
-                              border: Border.all(
-                                color: isDark
-                                    ? AppColors.darkBorder
-                                    : AppColors.lightBorder,
-                                width: 2,
-                              ),
-                            ),
-                            child: Text(
-                              interest,
-                              style: TextStyle(
-                                fontSize: AppTypography.fontSM,
-                                fontWeight: FontWeight.w500,
-                                color: isDark
-                                    ? AppColors.darkText
-                                    : AppColors.lightText,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: AppSpacing.lg),
-
-                  // Details section
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 500),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: _ProfileSection(
-                      title: 'Details',
-                      isDark: isDark,
-                      child: Column(
-                        children: [
-                          _DetailRow(
-                            icon: LucideIcons.briefcase,
-                            text: _currentUser.work,
-                            isDark: isDark,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          _DetailRow(
-                            icon: LucideIcons.graduationCap,
-                            text: _currentUser.education,
-                            isDark: isDark,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: AppSpacing.xxl),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
